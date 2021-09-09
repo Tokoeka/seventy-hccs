@@ -35,6 +35,7 @@ type QuestData = {
   acquire: Effect[];
   check: Effect[];
   equipment: Map<Slot, Item>;
+  retrocape?: string;
   familiar?: Familiar;
 };
 const questRecords: Record<Quest, () => QuestData> = {
@@ -80,6 +81,7 @@ const questRecords: Record<Quest, () => QuestData> = {
         [$slot`acc2`, $item`Retrospecs`],
         [$slot`acc3`, $item`Kremlin's Greatest Briefcase`],
       ]),
+      retrocape: "heck thrill",
     };
   },
 
@@ -154,7 +156,7 @@ const questRecords: Record<Quest, () => QuestData> = {
       [$slot`acc3`, $item`Beach Comb`],
     ]);
     if (have($item`LOV Epaulettes`)) outfit.set($slot`back`, $item`LOV Epaulettes`);
-    return { acquire: toAcquire, check: [], equipment: outfit };
+    return { acquire: toAcquire, check: [], equipment: outfit, retrocape: "heck thrill" };
   },
 
   [Quest.Muscle]: () => {
@@ -173,6 +175,7 @@ const questRecords: Record<Quest, () => QuestData> = {
         [$slot`acc1`, $item`Brutal brogues`],
         [$slot`acc3`, $item`"I Voted!" sticker`],
       ]),
+      retrocape: "muscle",
     };
   },
 
@@ -187,6 +190,7 @@ const questRecords: Record<Quest, () => QuestData> = {
         [$slot`acc2`, $item`Beach Comb`],
         [$slot`acc3`, $item`"I Voted!" sticker`],
       ]),
+      retrocape: "moxie",
     };
   },
 
@@ -197,6 +201,7 @@ const questRecords: Record<Quest, () => QuestData> = {
       check: [],
       equipment: new Map([
         [$slot`hat`, have(candle) ? candle : $item`wad of used tape`],
+        [$slot`back`, $item`vampyric cloake`],
         [$slot`weapon`, $item`Fourth of May Cosplay Saber`],
         [$slot`pants`, $item`Cargo Cultist Shorts`],
         [$slot`acc3`, $item`"I Voted!" sticker`],
@@ -211,7 +216,7 @@ const questRecords: Record<Quest, () => QuestData> = {
       [$slot`acc3`, $item`Kremlin's Greatest Briefcase`],
     ]);
     if (have($item`burning paper crane`)) outfit.set($slot`off-hand`, $item`burning paper crane`);
-    return { acquire: [], check: [], equipment: outfit };
+    return { acquire: [], check: [], equipment: outfit, retrocape: "vampire hold" };
   },
 
   [Quest.SpellDamage]: () => {
@@ -290,6 +295,7 @@ const questRecords: Record<Quest, () => QuestData> = {
         [$slot`acc1`, $item`battle broom`],
         [$slot`acc3`, $item`"I Voted!" sticker`],
       ]),
+      retrocape: "mysticality",
     };
   },
 
@@ -328,6 +334,7 @@ const questRecords: Record<Quest, () => QuestData> = {
         [$slot`acc3`, $item`Beach Comb`],
         [$slot`familiar`, $item`cracker`],
       ]),
+      retrocape: "vampire hold",
       familiar: $familiar`Exotic Parrot`,
     };
   },
@@ -405,21 +412,13 @@ const questRecords: Record<Quest, () => QuestData> = {
 };
 
 export function prep(quest: Quest): void {
-  const mode = new Map([
-    [Quest.Muscle, "muscle"],
-    [Quest.Mysticality, "mysticality"],
-    [Quest.Moxie, "moxie"],
-    [Quest.HP, "vampire hold"],
-    [Quest.HotResist, "vampire hold"],
-    [Quest.DeepDark, "vampire hold"],
-  ]);
   const record = questRecords[quest]();
   record.acquire.forEach((effect) => acquireEffect(effect));
   record.check.forEach((effect) => checkEffect(effect));
   if (record.familiar) useFamiliar(record.familiar);
-  if (!record.equipment.get($slot`back`)) {
-    cliExecute(`retrocape ${mode.get(quest) ?? "heck thrill"}`);
-  }
+  const back = record.equipment.get($slot`back`);
+  if (back && record.retrocape) throw `Multiple back items for ${quest}`;
+  if (record.retrocape) cliExecute(`retrocape ${record.retrocape}`);
   record.equipment.forEach((item, slot) => {
     if (!have(item)) {
       const ingredients = Object.keys(getIngredients(item));
