@@ -4,7 +4,6 @@ import {
   getIngredients,
   getRelated,
   numericModifier,
-  totalTurnsPlayed,
   useFamiliar,
   visitUrl,
 } from "kolmafia";
@@ -435,14 +434,12 @@ export function haveQuest(quest: QuestInfo): boolean {
   return get("csServicesPerformed").includes(quest.service);
 }
 
-export function prepAndDoQuest(quest: QuestInfo): number {
-  const turns = totalTurnsPlayed();
-  if (quest.id > Quest.Donate.id) throw `Invalid Quest ${quest.id}!!`;
+export function prepAndDoQuest(quest: QuestInfo): void {
+  if (quest.id > Quest.Donate.id) throw `Invalid quest ${quest.id}: ${quest.service}!`;
   if (haveQuest(quest)) {
     prep(quest);
     visitUrl("council.php");
     visitUrl(`choice.php?whichchoice=1089&option=${quest.id}`);
     if (haveQuest(quest)) throw `Couldn't complete quest ${quest.id}: ${quest.service}?`;
   }
-  return totalTurnsPlayed() - turns;
 }
