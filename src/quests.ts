@@ -1,6 +1,5 @@
 import {
   cliExecute,
-  containsText,
   equip,
   getIngredients,
   getRelated,
@@ -9,27 +8,29 @@ import {
   useFamiliar,
   visitUrl,
 } from "kolmafia";
-import { $effect, $familiar, $item, $slot, have } from "libram";
+import { $effect, $familiar, $item, $slot, get, have } from "libram";
 import { acquireEffect, checkEffect } from "./lib";
 
-export enum Quest {
-  HP = 1,
-  Muscle = 2,
-  Mysticality = 3,
-  Moxie = 4,
-  FamiliarWeight = 5,
-  WeaponDamage = 6,
-  SpellDamage = 7,
-  CombatFrequency = 8,
-  ItemDrop = 9,
-  HotResist = 10,
-  CoilWire = 11,
-  Donate = 30,
+type QuestInfo = { id: number; service: string };
+// prettier-ignore
+export const Quest: Record<string, QuestInfo> = {
+  HP:              { id: 1,   service: "Donate Blood" },
+  Muscle:          { id: 2,   service: "Feed The Children" },
+  Mysticality:     { id: 3,   service: "Build Playground Mazes" },
+  Moxie:           { id: 4,   service: "Feed Conspirators" },
+  FamiliarWeight:  { id: 5,   service: "Breed More Collies" },
+  WeaponDamage:    { id: 6,   service: "Reduce Gazelle Population" },
+  SpellDamage:     { id: 7,   service: "Make Sausage" },
+  CombatFrequency: { id: 8,   service: "Be a Living Statue" },
+  ItemDrop:        { id: 9,   service: "Make Margaritas" },
+  HotResist:       { id: 10,  service: "Clean Steam Tunnels" },
+  CoilWire:        { id: 11,  service: "Coil Wire" },
+  Donate:          { id: 30,  service: "Donate Your Body To Science" },
 
-  Beginning = 900,
-  Leveling = 901,
-  DeepDark = 902,
-}
+  Beginning:       { id: 900, service: "" },
+  Leveling:        { id: 901, service: "" },
+  DeepDark:        { id: 902, service: "" },
+} as const;
 
 type QuestData = {
   acquire: Effect[];
@@ -38,8 +39,8 @@ type QuestData = {
   retrocape?: string;
   familiar?: Familiar;
 };
-const questRecords: Record<Quest, () => QuestData> = {
-  [Quest.Beginning]: () => {
+const questRecords: Record<number, () => QuestData> = {
+  [Quest.Beginning.id]: () => {
     return {
       acquire: [
         $effect`Feeling Excited`,
@@ -67,8 +68,8 @@ const questRecords: Record<Quest, () => QuestData> = {
     };
   },
 
-  // Maximize Myst and MP, blue rocket will do all the regen for us
-  [Quest.CoilWire]: () => {
+  // Maximize Myst and MP
+  [Quest.CoilWire.id]: () => {
     return {
       acquire: [],
       check: [],
@@ -85,7 +86,7 @@ const questRecords: Record<Quest, () => QuestData> = {
     };
   },
 
-  [Quest.Leveling]: () => {
+  [Quest.Leveling.id]: () => {
     const toAcquire = [
       $effect`AAA-Charged`,
       $effect`A Girl Named Sue`,
@@ -159,7 +160,7 @@ const questRecords: Record<Quest, () => QuestData> = {
     return { acquire: toAcquire, check: [], equipment: outfit, retrocape: "heck thrill" };
   },
 
-  [Quest.Muscle]: () => {
+  [Quest.Muscle.id]: () => {
     return {
       acquire: [
         $effect`Expert Oiliness`,
@@ -179,7 +180,7 @@ const questRecords: Record<Quest, () => QuestData> = {
     };
   },
 
-  [Quest.Moxie]: () => {
+  [Quest.Moxie.id]: () => {
     return {
       acquire: [$effect`Disco Fever`, $effect`Expert Oiliness`, $effect`Quiet Desperation`],
       check: [$effect`Sparkly!`, $effect`Spit Upon`],
@@ -194,7 +195,7 @@ const questRecords: Record<Quest, () => QuestData> = {
     };
   },
 
-  [Quest.HP]: () => {
+  [Quest.HP.id]: () => {
     const candle = $item`extra-wide head candle`;
     return {
       acquire: [$effect`Song of Starch`],
@@ -209,7 +210,7 @@ const questRecords: Record<Quest, () => QuestData> = {
     };
   },
 
-  [Quest.DeepDark]: () => {
+  [Quest.DeepDark.id]: () => {
     const outfit = new Map([
       [$slot`weapon`, $item`Fourth of May Cosplay Saber`],
       [$slot`pants`, $item`pantogram pants`],
@@ -219,7 +220,7 @@ const questRecords: Record<Quest, () => QuestData> = {
     return { acquire: [], check: [], equipment: outfit, retrocape: "vampire hold" };
   },
 
-  [Quest.SpellDamage]: () => {
+  [Quest.SpellDamage.id]: () => {
     return {
       acquire: [
         $effect`Arched Eyebrow of the Archmage`,
@@ -256,7 +257,7 @@ const questRecords: Record<Quest, () => QuestData> = {
     };
   },
 
-  [Quest.WeaponDamage]: () => {
+  [Quest.WeaponDamage.id]: () => {
     const toAcquire = [
       $effect`Bow-Legged Swagger`,
       $effect`Cowrruption`,
@@ -285,7 +286,7 @@ const questRecords: Record<Quest, () => QuestData> = {
     return { acquire: toAcquire, check: toCheck, equipment: outfit };
   },
 
-  [Quest.Mysticality]: () => {
+  [Quest.Mysticality.id]: () => {
     return {
       acquire: [$effect`Quiet Judgement`],
       check: [$effect`Nanobrainy`, $effect`Spit Upon`, $effect`Witch Breaded`],
@@ -299,7 +300,7 @@ const questRecords: Record<Quest, () => QuestData> = {
     };
   },
 
-  [Quest.CombatFrequency]: () => {
+  [Quest.CombatFrequency.id]: () => {
     return {
       acquire: [
         $effect`Become Superficially interested`,
@@ -322,7 +323,7 @@ const questRecords: Record<Quest, () => QuestData> = {
     };
   },
 
-  [Quest.HotResist]: () => {
+  [Quest.HotResist.id]: () => {
     return {
       acquire: [],
       check: [$effect`Fireproof Foam Suit`],
@@ -339,7 +340,7 @@ const questRecords: Record<Quest, () => QuestData> = {
     };
   },
 
-  [Quest.FamiliarWeight]: () => {
+  [Quest.FamiliarWeight.id]: () => {
     return {
       acquire: [
         $effect`Man's Worst Enemy`,
@@ -371,7 +372,7 @@ const questRecords: Record<Quest, () => QuestData> = {
     };
   },
 
-  [Quest.ItemDrop]: () => {
+  [Quest.ItemDrop.id]: () => {
     const toAcquire = [
       $effect`Feeling Lost`,
       $effect`Nearly All-Natural`,
@@ -406,18 +407,18 @@ const questRecords: Record<Quest, () => QuestData> = {
     };
   },
 
-  [Quest.Donate]: () => {
+  [Quest.Donate.id]: () => {
     return { acquire: [], check: [], equipment: new Map() };
   },
-};
+} as const;
 
-export function prep(quest: Quest): void {
-  const record = questRecords[quest]();
+export function prep(quest: QuestInfo): void {
+  const record = questRecords[quest.id]();
   record.acquire.forEach((effect) => acquireEffect(effect));
   record.check.forEach((effect) => checkEffect(effect));
   if (record.familiar) useFamiliar(record.familiar);
   const back = record.equipment.get($slot`back`);
-  if (back && record.retrocape) throw `Multiple back items for ${quest}`;
+  if (back && record.retrocape) throw `Multiple back items for ${quest.id}`;
   if (record.retrocape) cliExecute(`retrocape ${record.retrocape}`);
   record.equipment.forEach((item, slot) => {
     if (!have(item)) {
@@ -430,18 +431,18 @@ export function prep(quest: Quest): void {
   });
 }
 
-export function haveQuest(id: number): boolean {
-  return containsText(visitUrl("council.php"), `<input type=hidden name=option value=${id}>`);
+export function haveQuest(quest: QuestInfo): boolean {
+  return get("csServicesPerformed").includes(quest.service);
 }
 
-export function prepAndDoQuest(id: Quest): number {
+export function prepAndDoQuest(quest: QuestInfo): number {
   const turns = totalTurnsPlayed();
-  if (id > Quest.Donate) throw `Invalid Quest ${id}!!`;
-  if (haveQuest(id)) {
-    prep(id);
+  if (quest.id > Quest.Donate.id) throw `Invalid Quest ${quest.id}!!`;
+  if (haveQuest(quest)) {
+    prep(quest);
     visitUrl("council.php");
-    visitUrl(`choice.php?whichchoice=1089&option=${id}`);
-    if (haveQuest(id)) throw `Couldn't complete quest ${id}?`;
+    visitUrl(`choice.php?whichchoice=1089&option=${quest.id}`);
+    if (haveQuest(quest)) throw `Couldn't complete quest ${quest.id}: ${quest.service}?`;
   }
   return totalTurnsPlayed() - turns;
 }
