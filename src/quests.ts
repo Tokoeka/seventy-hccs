@@ -224,7 +224,6 @@ const questRecords: Record<number, () => QuestData> = {
       acquire: [
         $effect`Arched Eyebrow of the Archmage`,
         $effect`Cowrruption`,
-        $effect`In a Lather`,
         $effect`Jackasses' Symphony of Destruction`,
         $effect`Song of Sauce`,
         $effect`The Magic of LOV`,
@@ -324,7 +323,7 @@ const questRecords: Record<number, () => QuestData> = {
 
   [Quest.HotResist.id]: () => {
     return {
-      acquire: [],
+      acquire: [$effect`Astral Shell`, $effect`Elemental Saucesphere`],
       check: [$effect`Fireproof Foam Suit`],
       equipment: new Map([
         [$slot`weapon`, $item`Fourth of May Cosplay Saber`],
@@ -342,6 +341,8 @@ const questRecords: Record<number, () => QuestData> = {
   [Quest.FamiliarWeight.id]: () => {
     return {
       acquire: [
+        $effect`Empathy`,
+        $effect`Joy`,
         $effect`Man's Worst Enemy`,
         $effect`Robot Friends`,
         $effect`Shortly Stacked`,
@@ -349,15 +350,14 @@ const questRecords: Record<number, () => QuestData> = {
       ],
       check: [
         $effect`[1701]Hip to the Jive`,
-        $effect`Joy`,
-        $effect`Smart Drunk`,
         $effect`All Is Forgiven`,
         $effect`Bureaucratized`,
         $effect`Chorale of Companionship`,
         $effect`Down With Chow`,
-        $effect`Optimist Primal`,
         $effect`Meteor Showered`,
         $effect`Open Heart Surgery`,
+        $effect`Optimist Primal`,
+        $effect`Smart Drunk`,
       ],
       equipment: new Map([
         [$slot`weapon`, $item`Fourth of May Cosplay Saber`],
@@ -373,6 +373,7 @@ const questRecords: Record<number, () => QuestData> = {
 
   [Quest.ItemDrop.id]: () => {
     const toAcquire = [
+      $effect`Fat Leon's Phat Loot Lyric`,
       $effect`Feeling Lost`,
       $effect`Nearly All-Natural`,
       $effect`Steely-Eyed Squint`,
@@ -413,11 +414,11 @@ const questRecords: Record<number, () => QuestData> = {
 
 export function prep(quest: QuestInfo): void {
   const record = questRecords[quest.id]();
+  const back = record.equipment.get($slot`back`);
+  if (back && record.retrocape) throw `Multiple back items for ${quest.id}`;
   record.acquire.forEach((effect) => acquireEffect(effect));
   record.check.forEach((effect) => checkEffect(effect));
   if (record.familiar) useFamiliar(record.familiar);
-  const back = record.equipment.get($slot`back`);
-  if (back && record.retrocape) throw `Multiple back items for ${quest.id}`;
   if (record.retrocape) cliExecute(`retrocape ${record.retrocape}`);
   record.equipment.forEach((item, slot) => {
     if (!have(item)) {
