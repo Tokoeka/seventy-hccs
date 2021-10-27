@@ -404,15 +404,29 @@ function levelAndDoQuests() {
       const soulFoodCasts = Math.floor(Math.min(maxMPGains, maxSoulFoodCasts));
       if (soulFoodCasts > 0) useSkill(soulFoodCasts, $skill`Soul Food`);
 
-      while (
-        have($item`magical sausage casing`) &&
-        (get("_sausagesMade") + 1) * 111 < myMeat() - MEAT_SAFE_LIMIT &&
-        myMaxmp() - myMp() > 1000 &&
-        myMaxmp() - mpCost($skill`Summon BRICKOs`) > MP_SAFE_LIMIT &&
-        get("_sausagesEaten") < 23
-      ) {
-        create($item`magical sausage`);
-        eat($item`magical sausage`);
+      const casing = $item`magical sausage casing`;
+      const sausage = $item`magical sausage`;
+      if (have(casing)) {
+        const made = get("_sausagesMade");
+        const limit = 23 - get("_sausagesMade");
+        const have = itemAmount(casing);
+        let afford = 0;
+        let cost = 0;
+        for (let i = 0; i < made; i++) {
+          cost += 111 * (made + i);
+          if (cost < myMeat() - MEAT_SAFE_LIMIT) afford++;
+          else break;
+        }
+        const quantity = Math.min(limit, have, afford);
+        if (quantity > 0) create(quantity, sausage);
+      }
+
+      if (have(sausage)) {
+        const limit = 23 - get("_sausagesEaten");
+        const have = itemAmount(sausage);
+        const want = Math.floor((myMaxmp() - myMp()) / 1000);
+        const quantity = Math.min(limit, have, want);
+        if (quantity > 0) eat(quantity, sausage);
       }
 
       while (myMp() - mpCost($skill`Summon BRICKOs`) > MP_SAFE_LIMIT) {
