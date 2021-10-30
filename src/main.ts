@@ -408,11 +408,11 @@ function levelAndDoQuests() {
       const sausage = $item`magical sausage`;
       if (have(casing)) {
         const made = get("_sausagesMade");
-        const limit = 23 - get("_sausagesMade");
+        const limit = Math.max(0, 23 - made);
         const have = itemAmount(casing);
         let afford = 0;
         let cost = 0;
-        for (let i = 0; i < made; i++) {
+        for (let i = 0; i < limit; i++) {
           cost += 111 * (made + i);
           if (cost < myMeat() - MEAT_SAFE_LIMIT) afford++;
           else break;
@@ -424,7 +424,7 @@ function levelAndDoQuests() {
       if (have(sausage)) {
         const limit = 23 - get("_sausagesEaten");
         const have = itemAmount(sausage);
-        const want = Math.floor((myMaxmp() - myMp()) / 1000);
+        const want = Math.floor((myMaxmp() - myMp()) / 999);
         const quantity = Math.min(limit, have, want);
         if (quantity > 0) eat(quantity, sausage);
       }
