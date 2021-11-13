@@ -30,6 +30,7 @@ import {
   $items,
   $location,
   $monster,
+  $phylum,
   $skill,
   $slot,
   $stat,
@@ -62,6 +63,7 @@ export const enum FamiliarFlag {
 }
 
 // Locations
+const caldera = $location`The Bubblin' Caldera`;
 const civicCenter = $location`Gingerbread Civic Center`;
 const deepMachineTunnels = $location`The Deep Machine Tunnels`;
 const direWarren = $location`The Dire Warren`;
@@ -70,7 +72,6 @@ const haikuDungeon = $location`The Haiku Dungeon`;
 const loveTunnel = $location`The Tunnel of L.O.V.E.`;
 const neverendingParty = $location`The Neverending Party`;
 const noobCave = $location`Noob Cave`;
-const skeletonStore = $location`The Skeleton Store`;
 const slimeTube = $location`The Slime Tube`;
 const snojo = $location`The X-32-F Combat Training Snowman`;
 const statelyPleasureDome = $location`The Stately Pleasure Dome`;
@@ -144,20 +145,21 @@ export const preCoilEvents: Record<string, eventData> = {
     },
   },
 
-  tropicalSkeleton: {
+  crimboShrub: {
     ready: () => !have($effect`Everything Looks Red`),
     run: (): void => {
-      equip($slot`weapon`, $item`Fourth of May Cosplay Saber`);
+      prep(Quest.Caldera);
       familiar($familiar`Crimbo Shrub`);
-      // Decorate Crimbo Shrub with LED Mandala, Jack-O-Lantern Lights, Popcorn Strands, and Big Red-Wrapped Presents
+      // Decorate Crimbo Shrub with LED Mandala, Actual Candles, Popcorn Strands, and Big Red-Wrapped Presents
       if (!get("_shrubDecorated")) {
         const decorations = toInt($item`box of old Crimbo decorations`);
         visitUrl(`inv_use.php?pwd=&which=99&whichitem=${decorations}`);
-        visitUrl(`choice.php?whichchoice=999&pwd=&option=1&topper=2&lights=5&garland=3&gift=2`);
+        visitUrl(`choice.php?whichchoice=999&pwd=&option=1&topper=2&lights=2&garland=3&gift=2`);
       }
-      mapMonster(skeletonStore, $monster`novelty tropical skeleton`, MacroList.FreeFight);
+      mapMonster(caldera, $monster`lava lamprey`, MacroList.FreeFight);
       checkEffect($effect`Everything Looks Red`);
-      $items`cherry, grapefruit, lemon, strawberry`.forEach((fruit) => checkAvailable(fruit));
+      if (get("dnaSyringe") !== `${$phylum`fish`}`) throw `Failed to obtain fish DNA?`;
+      cliExecute("camp dnainject");
     },
   },
 };
@@ -303,6 +305,8 @@ export const levelingEvents: Record<string, eventData> = {
       }
       selectBestFamiliar();
       adventure(snojo, myFamiliar().combat ? MacroList.FastFreeFight : MacroList.FreeFight);
+      if (get("dnaSyringe") === `${$phylum`construct`}`) cliExecute("camp potion 1");
+      checkEffect($effect`Human-Machine Hybrid`);
     },
   },
 

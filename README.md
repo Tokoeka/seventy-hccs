@@ -23,7 +23,7 @@ svn checkout https://github.com/s-k-z/seventy-hccs/branches/master/KoLmafia
    - ceiling fan
    - foreign language tapes
    - a piggy bank
-7. [Diabolic pizza cube](https://kol.coldfront.net/thekolwiki/index.php/Diabolic_pizza_cube) installed into your workshed
+7. [Little Geneticist DNA-Splicing Lab](https://kol.coldfront.net/thekolwiki/index.php/Little_Geneticist_DNA-Splicing_Lab) installed into your workshed
 8. [Gingerbread City fully upgraded](https://kol.coldfront.net/thekolwiki/index.php/Civic_Planning_Office) with access to the Upscale Retail District, Sewers, Digital Clock and Thickened Walls
 9. A [Gold detective badge](https://kol.coldfront.net/thekolwiki/index.php/Gold_detective_badge) purchased from the [11th Precinct](https://kol.coldfront.net/thekolwiki/index.php/The_Precinct)
 10. At least 196 bronze deliveries for the [Guzzlr tablet](https://kol.coldfront.net/thekolwiki/index.php/Guzzlr_tablet)

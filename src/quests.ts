@@ -30,10 +30,11 @@ export const Quest: Record<string, QuestInfo> = {
   Donate:          { id: 30,  service: "Donate Your Body To Science" },
 
   Beginning:       { id: 900, service: "" },
-  Leveling:        { id: 901, service: "" },
-  LevelingML:      { id: 902, service: "" },
-  DeepDark:        { id: 903, service: "" },
-  Vintner:         { id: 904, service: "" },
+  Caldera:         { id: 900, service: "" },
+  Leveling:        { id: 900, service: "" },
+  LevelingML:      { id: 900, service: "" },
+  DeepDark:        { id: 900, service: "" },
+  Vintner:         { id: 900, service: "" },
 } as const;
 
 type QuestData = {
@@ -69,6 +70,18 @@ const questRecords: Record<number, () => QuestData> = {
         [$slot`acc2`, $item`Powerful Glove`],
         [$slot`acc3`, $item`Kremlin's Greatest Briefcase`],
       ]),
+    };
+  },
+
+  [Quest.Caldera.id]: () => {
+    return {
+      acquire: [],
+      check: [$effect`Feeling Peaceful`],
+      equipment: new Map([
+        [$slot`weapon`, $item`Fourth of May Cosplay Saber`],
+        [$slot`off-hand`, $item`industrial fire extinguisher`],
+      ]),
+      retrocape: "vampire hold",
     };
   },
 

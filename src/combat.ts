@@ -14,12 +14,13 @@ import {
   useSkill,
   visitUrl,
 } from "kolmafia";
-import { $item, $location, $monster, $skill, get, Macro, Witchess } from "libram";
+import { $effect, $item, $location, $monster, $skill, get, Macro, Witchess } from "libram";
 
 const amateurNinja = $monster`amateur ninja`.id;
-const noveltySkeleton = $monster`novelty tropical skeleton`.id;
+const lavaLamprey = $monster`lava lamprey`.id;
 const mastiff = $monster`toothless mastiff bitch`.id;
 const gentrifier = $monster`gingerbread gentrifier`.id;
+const snowman = $monster`X-32-F Combat Training Snowman`.id;
 const toxicBeastie = $monster`toxic beastie`.id;
 const LOVEnforcer = $monster`LOV Enforcer`.id;
 const LOVEngineer = $monster`LOV Engineer`.id;
@@ -46,7 +47,7 @@ const notAllowList = [
   $monster`The Icewoman`,
   // mapped monsters
   $monster`amateur ninja`,
-  $monster`novelty tropical skeleton`,
+  $monster`lava lamprey`,
   $monster`toothless mastiff bitch`,
   // gingerbread city
   $monster`gingerbread finance bro`,
@@ -151,11 +152,17 @@ const DefaultMacro = new Macro()
   .if_(`monsterid ${toxicBeastie}`, Macro.skill($skill`Summon Love Gnats`).step(FreeInstaKill))
   .if_(`monsterid ${amateurNinja}`, FreeInstaKill)
   .if_(
-    `monsterid ${noveltySkeleton}`,
-    Macro.trySkill($skill`Open a Big Red Present`).skill($skill`Use the Force`)
+    `monsterid ${lavaLamprey}`,
+    Macro.trySkill($skill`Open a Big Red Present`)
+      .tryItem($item`DNA extraction syringe`)
+      .skill($skill`Use the Force`)
   )
   .if_(`monsterid ${mastiff}`, Macro.skill($skill`Meteor Shower`).skill($skill`Use the Force`))
   .if_(`snarfblat ${retailDistrict}`, CigKill)
+  .if_(
+    `monsterid ${snowman} && !haseffect ${$effect`Human-Machine Hybrid`}`,
+    Macro.tryItem($item`DNA extraction syringe`)
+  )
   .if_(notAllowList, TryBanish)
   .trySkill($skill`Digitize`)
   .trySkill($skill`%fn, spit on me!`)

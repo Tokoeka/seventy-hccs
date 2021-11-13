@@ -23,7 +23,7 @@ export function checkReadyToAscend(checkVoteReady: boolean): void {
 
   prepareAscension(
     {
-      workshed: $item`diabolic pizza cube`,
+      workshed: $item`Little Geneticist DNA-Splicing Lab`,
       garden: $item`Peppermint Pip Packet`,
       eudora: $item`Our Daily Candles™ order form`,
     },

@@ -64,7 +64,6 @@ import {
   MEAT_SAFE_LIMIT,
   MP_SAFE_LIMIT,
 } from "./config";
-import { eatPizzas } from "./diet";
 import { hasRemainingFreeFights, levelingEvents, oneOffEvents, preCoilEvents } from "./events";
 import {
   castBestLibram,
@@ -306,8 +305,6 @@ function postCoilWire() {
   $effects`[1701]Hip to the Jive, In a Lather`.forEach(acquireEffect); // 5 drunk, 5500 meat
   // 11149 - 5500 = 5649 meat
 
-  // Eat pizza before synthesizing, generate a licorice boa from pizza
-  eatPizzas(); // 5649 - 987 - 950 - 495 - 215 - 77 - 38 = 2887 meat
   const toSynth = [$effect`Synthesis: Smart`, $effect`Synthesis: Learning`].filter(
     (effect) => !have(effect)
   );

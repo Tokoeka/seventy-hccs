@@ -111,6 +111,10 @@ export function useDroppedItems(): void {
     $item`resolution: be smarter`,
     $item`resolution: be wealthier`,
     // other potions
+    $item`Gene Tonic: Beast`,
+    $item`Gene Tonic: Construct`,
+    $item`Gene Tonic: Elf`,
+    $item`Gene Tonic: Pirate`,
     $item`power pill`,
     $item`short stack of pancakes`,
   ].forEach((singleUse) => {
