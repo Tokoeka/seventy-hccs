@@ -288,14 +288,8 @@ function postCoilWire() {
   ].forEach((skill) => useSkill(skill));
   // 143 mp
 
-  [
-    $item`oil of expertise`,
-    $item`philter of phorce`,
-    $item`ointment of the occult`,
-    $item`eyedrops of the ermine`,
-  ].forEach((saucePotion) => {
-    if (!have(saucePotion) && !have(itemToEffect(saucePotion))) create(saucePotion);
-  });
+  const ointment = $item`ointment of the occult`;
+  if (!have(ointment) && !have(itemToEffect(ointment))) create(ointment);
 
   retrieveItem($item`toy accordion`);
   // 11291 - 142 = 11149 meat
