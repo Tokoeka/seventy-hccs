@@ -403,7 +403,7 @@ const questRecords: Record<number, () => QuestData> = {
         [$slot`acc1`, $item`Brutal brogues`],
         [$slot`acc2`, $item`hewn moon-rune spoon`],
         [$slot`acc3`, $item`Beach Comb`],
-        [$slot`familiar`, $item`cracker`],
+        [$slot`familiar`, $item`none`], // TODO: Find a new familiar equip?
       ]),
       retrocape: "vampire hold",
       familiar: $familiar`Exotic Parrot`,
@@ -425,9 +425,6 @@ const questRecords: Record<number, () => QuestData> = {
       check: [
         $effect`[1701]Hip to the Jive`,
         $effect`All Is Forgiven`,
-        $effect`Bureaucratized`,
-        $effect`Chorale of Companionship`,
-        $effect`Down With Chow`,
         $effect`Meteor Showered`,
         $effect`Open Heart Surgery`,
         $effect`You Can Really Taste the Dormouse`,
@@ -439,9 +436,9 @@ const questRecords: Record<number, () => QuestData> = {
         [$slot`acc1`, $item`Brutal brogues`],
         [$slot`acc2`, $item`hewn moon-rune spoon`],
         [$slot`acc3`, $item`Beach Comb`],
-        [$slot`familiar`, $item`cracker`],
+        [$slot`familiar`, $item`none`], // TODO: Find a new familiar equip?
       ]),
-      familiar: $familiar`Exotic Parrot`,
+      familiar: $familiar`none`, // TODO: Find a new familiar?
     };
   },
 
