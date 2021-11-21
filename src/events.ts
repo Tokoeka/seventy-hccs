@@ -125,12 +125,11 @@ export const preCoilEvents: Record<string, eventData> = {
     },
   },
 
-  hipster: {
-    ready: () => !get("_ironicMoustache"),
+  castDigitize: {
+    ready: () => get("_sourceTerminalDigitizeUses") < 1,
     run: (): void => {
       cliExecute("retrocape heck thrill");
-      familiar($familiar`Mini-Hipster`);
-      equip($slot`familiar`, $item`none`);
+      selectBestFamiliar();
       if (get("_sourceTerminalDigitizeUses") < 1) SourceTerminal.educate($skill`Digitize`);
       withEquipment(
         () => adventure(noobCave, MacroList.FreeFight),
@@ -139,9 +138,7 @@ export const preCoilEvents: Record<string, eventData> = {
       if (get("_sourceTerminalDigitizeUses") > 0) {
         SourceTerminal.educate($skill`Compress`);
         SourceTerminal.educate($skill`Extract`);
-      }
-      equip($slot`familiar`, $item`none`);
-      checkAvailable($item`ironic moustache`);
+      } else throw `Failed to cast digitize?`;
     },
   },
 
