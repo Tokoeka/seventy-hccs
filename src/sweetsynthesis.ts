@@ -61,7 +61,7 @@ const transforms = new Map<Item, candySet>([
   [$item`peppermint sprout`, peppermintGroup],
   [$item`sugar sheet`, sugarGroup],
 ]); // Cyclical references will break searching, no keys allowed in the candySets!
-const gnoMartCandy = [
+const gnoMart = [
   $item`jabañero-flavored chewing gum`,
   $item`lime-and-chile-flavored chewing gum`,
   $item`pickle-flavored chewing gum`,
@@ -94,7 +94,7 @@ export function synthesize(
   });
   if (gnomadsAvailable()) {
     const add = (simple: Item) => candies[candyType.simple].push({ candy: simple, count: 100 });
-    gnoMartCandy.forEach((simple) => add(simple));
+    gnoMart.forEach(add);
   }
   const check = (pair: { candy: Item; count: number }) => {
     const count = itemAmount(pair.candy);
@@ -123,7 +123,7 @@ export function synthesize(
   for (const pair of solution.pairs) {
     for (const creatable of pair) {
       const need = pair[0] === pair[1] ? 2 : 1;
-      if (gnomadsAvailable() && gnoMartCandy.includes(creatable) && !have(creatable, need)) {
+      if (gnomadsAvailable() && gnoMart.includes(creatable) && !have(creatable, need)) {
         retrieveItem(creatable, need);
       }
       // source will be $item`none` if no ingredients
