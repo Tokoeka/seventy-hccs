@@ -211,7 +211,7 @@ function preCoilWire() {
   //
   if (!get("_deckCardsSeen").includes("1952")) cliExecute("cheat 1952");
   if (have($item`1952 Mickey Mantle card`)) autosell(1, $item`1952 Mickey Mantle card`);
-  useSkill($skill`Communism!`);
+  if (!get("_communismUsed")) useSkill($skill`Communism!`);
   if (!get("_chateauDeskHarvested")) visitUrl("place.php?whichplace=chateau&action=chateau_desk1");
   if (!get("_horsery")) cliExecute("horsery dark");
   SongBoom.setSong("Total Eclipse of Your Meat");
@@ -227,6 +227,7 @@ function preCoilWire() {
     [$item`battery (AAA)`,                 () => harvestBatteries()],
     [$item`battery (lantern)`,             () => create($item`battery (lantern)`)],
     [$item`Brutal brogues`,                () => cliExecute("bastille bbq brutalist catapult")],
+    [$item`bus pass`,                      () => retrieveItem($item`bus pass`)], // 10716 - 5000 = 5716 meat
     [$item`cop dollar`,                    () => cliExecute("Detective Solver")],
     [$item`cuppa Loyal tea`,               () => cliExecute("teatree loyal")],
     [$item`flimsy hardwood scraps`,        () => visitUrl("shop.php?whichshop=lathe")],
@@ -235,7 +236,7 @@ function preCoilWire() {
     [$item`wrench`,                        () => cliExecute(`cheat wrench`)],
     [$item`box of Familiar Jacks`,         () => create($item`box of Familiar Jacks`)],
     [$item`occult jelly donut`,            () => create($item`occult jelly donut`)],
-    [$item`sombrero-mounted sparkler`,     () => retrieveItem($item`sombrero-mounted sparkler`)], // 10716 - 475 = 10241 meat
+    [$item`sombrero-mounted sparkler`,     () => retrieveItem($item`sombrero-mounted sparkler`)], // 5716 - 475 = 5241 meat
     [$item`Yeg's Motel hand soap`,         () => cliExecute(`cargo item ${$item`Yeg's Motel hand soap`}`)],
     [$item`your cowboy boots`,             () => visitUrl("place.php?whichplace=town_right&action=townright_ltt")],
     [$skill`Seek out a Bird`,              () => use($item`Bird-a-Day calendar`)],
@@ -251,7 +252,7 @@ function preCoilWire() {
   changeMcd(10);
   if (myHp() < myMaxhp() * 0.9) cliExecute("hottub");
   for (const event of Object.values(preCoilEvents)) if (event.ready()) event.run();
-  // 10241 + 2000 = 12241 meat
+  // 5241 + 2000 = 7241 meat
   spendAllMpOnLibrams();
 }
 
@@ -271,7 +272,7 @@ function postCoilWire() {
     if (!have(range)) retrieveItem(range);
     use(range);
   }
-  // 12241 - 950 = 11291 meat
+  // 7241 - 950 = 6291 meat
   [
     // Need all of these to craft with
     $skill`Advanced Cocktailcrafting`,
@@ -293,17 +294,15 @@ function postCoilWire() {
   if (!have(ointment) && !have(itemToEffect(ointment))) create(ointment);
 
   retrieveItem($item`toy accordion`);
-  // 11291 - 142 = 11149 meat
+  // 6291 - 142 = 6149 meat
   //useSkill(2, $skill`The Ode to Booze`);
   acquireEffect($effect`Ode to Booze`);
   checkMainClan();
   $effects`[1701]Hip to the Jive, In a Lather`.forEach(acquireEffect); // 5 drunk, 5500 meat
-  // 11149 - 5500 = 5649 meat
+  // 6149 - 5500 = 649 meat
   const toSynth = [$effect`Synthesis: Smart`, $effect`Synthesis: Learning`].filter(
     (effect) => !have(effect)
   );
-  if (!have($item`bus pass`) && !have($item`bitchin' meatcar`)) retrieveItem($item`bus pass`); // 5000 meat
-  // 5649 - 5000 = 649 meat
   if (toSynth.length > 0) {
     cliExecute("garden pick");
     cliExecute("refresh inventory");
