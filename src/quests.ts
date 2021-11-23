@@ -7,6 +7,7 @@ import {
   myEffects,
   numericModifier,
   toEffect,
+  use,
   useFamiliar,
   visitUrl,
 } from "kolmafia";
@@ -403,7 +404,7 @@ const questRecords: Record<number, () => QuestData> = {
         [$slot`acc1`, $item`Brutal brogues`],
         [$slot`acc2`, $item`hewn moon-rune spoon`],
         [$slot`acc3`, $item`Beach Comb`],
-        [$slot`familiar`, $item`none`], // TODO: Find a new familiar equip?
+        [$slot`familiar`, $item`cracker`],
       ]),
       retrocape: "vampire hold",
       familiar: $familiar`Exotic Parrot`,
@@ -436,9 +437,9 @@ const questRecords: Record<number, () => QuestData> = {
         [$slot`acc1`, $item`Brutal brogues`],
         [$slot`acc2`, $item`hewn moon-rune spoon`],
         [$slot`acc3`, $item`Beach Comb`],
-        [$slot`familiar`, $item`none`], // TODO: Find a new familiar equip?
+        [$slot`familiar`, $item`cracker`],
       ]),
-      familiar: $familiar`none`, // TODO: Find a new familiar?
+      familiar: $familiar`Exotic Parrot`,
     };
   },
 
@@ -511,6 +512,7 @@ export function prep(quest: QuestInfo): void {
   if (record.retrocape) cliExecute(`retrocape ${record.retrocape}`);
   record.equipment.forEach((item, slot) => {
     if (!have(item)) {
+      if (item === $item`cracker`) use($item`box of Familiar Jacks`);
       const ingredients = Object.keys(getIngredients(item));
       if (getRelated(item, "fold")) cliExecute(`fold ${item}`);
       else if (have(Item.get(ingredients[0] ?? "none"))) cliExecute(`make ${item}`);

@@ -137,7 +137,7 @@ export function main(argString = ""): void {
         Paths.CommunityService,
         $class`Sauceror`,
         Lifestyle.hardcore,
-        "wallaby",
+        "blender",
         $item`astral six-pack`,
         $item`astral statuette`
       );
@@ -233,6 +233,7 @@ function preCoilWire() {
     [$item`weeping willow wand`,           () => create($item`weeping willow wand`)],
     [$item`green mana`,                    () => cliExecute(`cheat forest`)],
     [$item`wrench`,                        () => cliExecute(`cheat wrench`)],
+    [$item`box of Familiar Jacks`,         () => create($item`box of Familiar Jacks`)],
     [$item`occult jelly donut`,            () => create($item`occult jelly donut`)],
     [$item`sombrero-mounted sparkler`,     () => retrieveItem($item`sombrero-mounted sparkler`)], // 10716 - 475 = 10241 meat
     [$item`Yeg's Motel hand soap`,         () => cliExecute(`cargo item ${$item`Yeg's Motel hand soap`}`)],
@@ -298,27 +299,22 @@ function postCoilWire() {
   checkMainClan();
   $effects`[1701]Hip to the Jive, In a Lather`.forEach(acquireEffect); // 5 drunk, 5500 meat
   // 11149 - 5500 = 5649 meat
-
   const toSynth = [$effect`Synthesis: Smart`, $effect`Synthesis: Learning`].filter(
     (effect) => !have(effect)
   );
+  if (!have($item`bus pass`) && !have($item`bitchin' meatcar`)) retrieveItem($item`bus pass`); // 5000 meat
+  // 5649 - 5000 = 649 meat
   if (toSynth.length > 0) {
     cliExecute("garden pick");
     cliExecute("refresh inventory");
     // Sweet synthesis with reserved candies omitted, add them back individually until a solution is found
-    const wantToKeep = [$item`Chubby and Plump bar`, $item`sugar sheet`];
+    const wantToKeep = [$item`Chubby and Plump bar`];
     for (let tries = 0; tries <= wantToKeep.length; tries++) {
       const toKeep = new Set(wantToKeep.slice(tries));
-      if (!toKeep.has($item`sugar sheet`)) useSkill($skill`Summon Sugar Sheets`);
       if (synthesize(toSynth, toKeep)) break;
       else if (toKeep.size === 0) throw `Unable to find a combination for all synthesis targets`;
     }
   }
-  // If we didn't use a sugar sheet for synthesis we can make a cold-filtered water
-  const water = $item`cold-filtered water`;
-  if (get("tomeSummons") < 3 && !have(water) && !have(itemToEffect(water))) create(water);
-  tryUse(water);
-  // If we didn't use a chubby and plump bar for synthesis we can use it for more HP and MP
   [
     $item`Chubby and Plump bar`,
     $item`Napalm In The Morning™ candle`,

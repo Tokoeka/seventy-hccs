@@ -2,8 +2,10 @@ import {
   create,
   getIngredients,
   getInventory,
+  gnomadsAvailable,
   itemAmount,
   print,
+  retrieveItem,
   sweetSynthesis,
   sweetSynthesisResult,
   toInt,
@@ -59,6 +61,12 @@ const transforms = new Map<Item, candySet>([
   [$item`peppermint sprout`, peppermintGroup],
   [$item`sugar sheet`, sugarGroup],
 ]); // Cyclical references will break searching, no keys allowed in the candySets!
+const gnoMartCandy = [
+  $item`jabañero-flavored chewing gum`,
+  $item`lime-and-chile-flavored chewing gum`,
+  $item`pickle-flavored chewing gum`,
+  $item`tamarind-flavored chewing gum`,
+]; // marzipan skull redundant with lime-and-chile
 
 /**
  * Search for candy pairs that satisfy all chosen Sweet Synthesis effects and then cast them all.
@@ -84,6 +92,10 @@ export function synthesize(
     const item = Item.get(name);
     candies[item.candyType as candyType]?.push({ candy: item, count: count });
   });
+  if (gnomadsAvailable()) {
+    const add = (simple: Item) => candies[candyType.simple].push({ candy: simple, count: 100 });
+    gnoMartCandy.forEach((simple) => add(simple));
+  }
   const check = (pair: { candy: Item; count: number }) => {
     const count = itemAmount(pair.candy);
     if (count !== pair.count) throw `Expected ${pair.count} ${pair.candy}, but found ${count}`;
@@ -110,6 +122,10 @@ export function synthesize(
   // Found a solution, now transform candies and synthesize
   for (const pair of solution.pairs) {
     for (const creatable of pair) {
+      const need = pair[0] === pair[1] ? 2 : 1;
+      if (gnomadsAvailable() && gnoMartCandy.includes(creatable) && !have(creatable, need)) {
+        retrieveItem(creatable, need);
+      }
       // source will be $item`none` if no ingredients
       const source = toItem(Object.keys(getIngredients(creatable))[0]);
       if (!test && !have(creatable) && transforms.has(source)) create(creatable);
