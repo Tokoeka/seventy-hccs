@@ -76,7 +76,7 @@ import {
   useDroppedItems,
   vote,
 } from "./iotms";
-import { acquireEffect, itemToEffect, tryUse, wishEffect, withContext } from "./lib";
+import { acquireEffect, checkEffect, itemToEffect, tryUse, wishEffect, withContext } from "./lib";
 import { checkReadyToAscend } from "./prep";
 import { haveQuest, prep, prepAndDoQuest, Quest } from "./quests";
 import { synthesize } from "./sweetsynthesis";
@@ -314,6 +314,7 @@ function postCoilWire() {
       else if (toKeep.size === 0) throw `Unable to find a combination for all synthesis targets`;
     }
   }
+  toSynth.forEach(checkEffect);
   [
     $item`Chubby and Plump bar`,
     $item`Napalm In The Morning™ candle`,
@@ -324,6 +325,7 @@ function postCoilWire() {
   equip($slot`acc2`, $item`Powerful Glove`);
   retrieveItem($item`turtle totem`);
   retrieveItem($item`saucepan`);
+  tuneMoon(MoonSign.Platypus);
   prep(Quest.Leveling);
   // 316 mp
   if (have($item`LOV Epaulettes`)) prep(Quest.LevelingML);
@@ -422,7 +424,6 @@ function levelAndDoQuests() {
   }
 
   if (haveQuest(Quest.WeaponDamage)) {
-    tuneMoon(MoonSign.Platypus);
     oneOffEvents.innerElf();
     oneOffEvents.meteorShower();
     prepAndDoQuest(Quest.WeaponDamage);
