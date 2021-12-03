@@ -3,6 +3,7 @@ import {
   autosell,
   canInteract,
   changeMcd,
+  chew,
   cliExecute,
   create,
   drink,
@@ -264,7 +265,7 @@ function postCoilWire() {
   oneOffEvents.nanobrainy();
   // Start buffing familiar weight now that we're done with Nanorhino
   if (get("_saberMod") < 1) cliExecute("saber familiar");
-  $effects`All Is Forgiven, Sparkly!, Witch Breaded`.forEach(wishEffect);
+  $effects`All Is Forgiven, Spit Upon, Witch Breaded`.forEach(wishEffect);
   useDroppedItems(); // In case we obtained a green candy heart already, don't want to synthesize it later
 
   if (!get("hasRange")) {
@@ -448,13 +449,13 @@ function levelAndDoQuests() {
     const loveSongSufficient = familiarWeight(myFamiliar()) + weightAdjustment() + icyWeight >= 295;
     const taffy = $item`pulled blue taffy`;
     const swayed = itemToEffect(taffy);
-    const wine = $item`1950 Vampire Vintner wine`;
     const needWeight = () => familiarWeight(myFamiliar()) + weightAdjustment() < 295;
     if (needWeight() && !have(swayed) && have(taffy)) cliExecute(`use * ${taffy}`);
     if (needWeight() && !have(coldHeart) && loveSongSufficient) cliExecute(`use * ${loveSong}`);
-    if (needWeight() && have(wine)) {
+    if (needWeight() && have($item`body spradium`)) chew($item`body spradium`);
+    if (needWeight() && have($item`1950 Vampire Vintner wine`)) {
       acquireEffect($effect`Ode to Booze`);
-      drink(wine); // 1 drunk
+      drink($item`1950 Vampire Vintner wine`); // 1 drunk
     }
     if (needWeight()) {
       while (have(loveSong) && haveEffect(coldHeart) < 20) {

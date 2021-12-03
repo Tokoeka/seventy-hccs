@@ -240,7 +240,6 @@ const questRecords: Record<number, () => QuestData> = {
     const toCheck = [
       $effect`Bastille Bourgeoisie`,
       $effect`Pointy Wizard Beard`,
-      $effect`Sparkly!`,
       $effect`Visions of the Deep Dark Deeps`,
     ];
     const toEquip = new Map([
@@ -323,7 +322,6 @@ const questRecords: Record<number, () => QuestData> = {
         $effect`Inner Elf`,
         $effect`Meteor Showered`,
         $effect`Nanobrainy`,
-        $effect`Sparkly!`,
         $effect`Spit Upon`,
         $effect`Toxic Vengeance`,
         $effect`Visions of the Deep Dark Deeps`,
